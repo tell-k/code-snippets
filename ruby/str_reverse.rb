@@ -17,7 +17,7 @@ def str_reverse2 (str)
     arr.join('')
 end
 
-#シングルバイト
+# single bytes
 str = "abcded"
 puts str.reverse();
 
