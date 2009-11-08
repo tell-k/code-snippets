@@ -21,7 +21,7 @@ end
 str = "abcded"
 puts str.reverse();
 
-#マルチバイト
+# multi bytes
 $KCODE = "UTF-8"
 str = "日本語文字列"
 result = str_reverse str
