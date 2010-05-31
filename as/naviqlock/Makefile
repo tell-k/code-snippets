@@ -1,3 +1,3 @@
 
 rascut: 
-	rascut -s src/Main.as -I "../libs" -m "./images/=images"
+	rascut -s src/Main.as -I "../libs" -I "./libs"

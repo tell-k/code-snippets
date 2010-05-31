@@ -28,7 +28,7 @@
 
             clock.w = 800;
             clock.h = 600;
-            clock.description = "WOYDE CLOCK";
+            clock.description = "NAVIQLOCK";
         }
     }
 }
