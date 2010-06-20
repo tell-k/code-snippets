@@ -1,4 +1,4 @@
-package test {
+package {
 	import org.flexunit.Assert;
 	import test.com.github.sugamasao.browser_utility.*;
 
