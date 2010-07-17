@@ -16,7 +16,7 @@
 
 function create_tree($y){
   echo create_leaf($y);
-  echo create_trunk($y, null,round($y/1.1));
+  echo create_trunk($y, null, round($y/1.1));
 }
 function create_leaf($y,$t=null,$c=1)
 {
