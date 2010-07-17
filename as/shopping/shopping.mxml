@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+    backgroundColor="#FFFFFF">
+
+
+    <!-- 郵便番号の自動取得 -->
+    <mx:HTTPService id="zip_service"
+        url="http://api.aoikujira.com/zip/zip.php"
+        method="GET" resultFormat="e4x"
+        result="zip_service_onResult()"
+        fault="sender_onFault(event)">
+    </mx:HTTPService>
+
+    <!-- データ検証 -->
+    <mx:Array id="validator_ary">
+        <!-- Eメール -->
+        <mx:EmailValidator source="{mail_txt}" property="text"/>
+        <!-- 郵便番号 -->
+        <mx:RegExpValidator source="{zip_txt}" property="text">
+            <mx:expression><![CDATA[^\d{3}-\d{4}$]]></mx:expression>
+        </mx:RegExpValidator>
+        <!-- 文字の長さチェック -->
+        <mx:StringValidator source="{name_txt}" property="text"
+             minLength="2" maxLength="30"/>
+        <mx:StringValidator source="{addr_txt}" property="text"
+            minLength="6" maxLength="512"/>
+        <mx:StringValidator source="{memo_txt}" property="text"
+             minLength="0" maxLength="512"/>
+     </mx:Array>
+
+    <!-- 送信機能 -->
+    <mx:HTTPService id="form_sender"
+         url="http://aoikujira.com/flash/sample/AppCatalog/send.php"
+         result="sender_onResult()"
+         fault="sender_onFault(event)"
+         resultFormat="text"
+         method="POST">
+         <mx:request>
+             <name>{name_txt.text}</name>
+             <zip>{zip_txt.text}</zip>
+             <address>{addr_txt.text}</address>
+             <mail>{mail_txt.text}</mail>
+             <order>{order_txt.text}</order>
+             <memo>{memo_txt.text}</memo>
+         </mx:request>
+     </mx:HTTPService>
+
+    <!-- 商品のリスト -->
+    <mx:ArrayCollection id="goods_data">
+        <mx:Object icon="assets/kani.jpg" label="ズワイカニ" price="4000" />
+        <mx:Object icon="assets/kani.jpg" label="タラバカニ" price="5000" />
+        <mx:Object icon="assets/kani.jpg" label="サワガニ" price="500" />
+        <mx:Object icon="assets/kani.jpg" label="ザリガニ" price="300" />
+        <mx:Object icon="assets/kani.jpg" label="遠心カニ" price="2000" />
+    </mx:ArrayCollection>
+    <!-- 画面レイアウト -->
+    <mx:ViewStack id="main_view" width="100%" height="100%" creationPolicy="all">
+        <!-- 商品の一覧ページ -->
+        <mx:Canvas id="list_page" label="商品一覧" width="100%" height="100%">
+            <mx:VBox width="100%" height="100%">
+                <!-- 商品リスト -->
+                <mx:TileList id="goods_list" width="100%" height="20%"
+                    dataProvider="{goods_data}"
+                    itemRenderer="{item_renderer}"/>
+                <!-- ボタン -->
+                <mx:HBox width="100%" height="28"
+                    horizontalAlign="right" paddingRight="8">
+                    <mx:Button label="注文を決定する"
+                        click="changeFormPage()"/>
+                </mx:HBox>
+            </mx:VBox>
+        </mx:Canvas>
+        <!-- 顧客情報入力ページ -->
+        <mx:Canvas id="form_page" label="フォーム" width="100%" height="100%">
+            <mx:Form width="100%">
+                <mx:FormHeading label="お届け先入力フォーム"/>
+                <mx:FormItem label="お名前" width="100%">
+                    <mx:TextInput id="name_txt" width="100%"
+                        imeMode="JAPANESE_HIRAGANA"/>
+                </mx:FormItem>
+                <mx:FormItem label="郵便番号">
+                    <mx:TextInput id="zip_txt"
+                        focusOut="getAddressFromZip()"/>
+                </mx:FormItem>
+                <mx:FormItem label="住所" width="100%">
+                    <mx:TextInput id="addr_txt" width="100%"
+                        imeMode="JAPANESE_HIRAGANA"/>
+                </mx:FormItem>
+                <mx:FormItem label="メールアドレス" width="100%">
+                    <mx:TextInput id="mail_txt" width="100%"/>
+                </mx:FormItem>
+                <mx:FormItem label="備考" width="100%">
+                    <mx:TextInput id="memo_txt" width="100%"
+                        imeMode="JAPANESE_HIRAGANA"/>
+                </mx:FormItem>
+                <mx:FormItem label="購入する商品" width="100%">
+                    <mx:TextArea id="order_txt" width="100%"
+                        editable="false" height="64"/>
+                </mx:FormItem>
+                <mx:FormItem width="100%">
+                    <mx:Button label="商品を選びなおす" click="changeListPage()"/>
+                    <mx:Button label="データを送信する" id="submit_btn" click="form_submit()"/>
+                </mx:FormItem>
+        </mx:Form>
+        </mx:Canvas>
+    </mx:ViewStack>
+
+    <!-- TileList のアイテム描画用 -->
+    <mx:Component id="item_renderer">
+        <mx:VBox width="150" height="150" horizontalAlign="center">
+            <mx:Label text="{data.label}" height="16"/>
+            <mx:Image source="{data.icon}" width="100" height="75"/>
+            <mx:Label text="{'価格 ' + outerDocument.YenFormat(data.price)}" height="16"/>
+            <mx:HBox>
+                <mx:Label text="購入数"/>
+                <mx:NumericStepper id="ns" change="{data.count = ns.value;}"/>
+            </mx:HBox>
+        </mx:VBox>
+    </mx:Component>
+
+    <mx:Script>
+        <![CDATA[
+            import mx.rpc.events.FaultEvent;
+            import mx.validators.Validator;
+            import mx.events.ListEvent;
+            import mx.controls.Alert;
+
+            public var nextpage_url:String = "http://kujirahand.com/";
+
+        public function YenFormat(s:String):String {
+            var result:String = "";
+            for (var i:int = 0; i < s.length; i++) {
+                if (i % 3 == 0 && i > 0) result = "," + result;
+                var c:String = s.charAt(s.length - i - 1);
+                result = c + result;
+            }
+            return "￥" + result + "-";
+        }
+
+            private function changeListPage():void {
+                main_view.selectedChild = list_page;
+            }
+
+            private function changeFormPage():void {
+                main_view.selectedChild = form_page;
+                var result:String = "";
+                var value:Number = 0;
+                for each (var data:Object in goods_data) {
+                    if (!data.count) continue;
+                    result += data.label + " - " + YenFormat(data.price) + 
+                        " x" + data.count + "\n";
+                    value += data.price * data.count;
+                }
+                order_txt.text = "合計" + YenFormat(value.toString()) + 
+                    "\n" + result;
+            }
+
+        private function getAddressFromZip():void {
+            var zip:String = zip_txt.text;
+            zip = zip.replace("\-","");
+            zip_service.send({zn:zip});
+        }
+        private function zip_service_onResult():void {
+            var r:XML = zip_service.lastResult as XML;
+            addr_txt.text = r.ADDRESS_value.value.@state +
+                r.ADDRESS_value.value.@city +
+                r.ADDRESS_value.value.@address;
+        }
+        private function form_submit():void {
+            var err_ary:Array = Validator.validateAll(validator_ary);
+            if (err_ary.length > 0) {
+                Alert.show("入力に誤りがあります。");
+                return;
+            }
+            submit_btn.enabled = false;
+            form_sender.send();
+        }
+        private function sender_onResult():void {
+            Alert.show("送信しました。ご注文ありがとうございました。");
+            // todo: この後ページの切り替え処理など
+            navigateToURL(new URLRequest(nextpage_url));
+        }
+        private function sender_onFault(event:FaultEvent):void {
+            Alert.show("送信に失敗しました。");
+            submit_btn.enabled = true;
+        }
+        ]]>
+    </mx:Script>
+</mx:Application>
