@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/share/!svn/ver/3164/lang/actionscript/swfgmap/trunk
+END
+LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/share/!svn/ver/3143/lang/actionscript/swfgmap/trunk/LICENSE
+END
+TestApp-config.xml
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/share/!svn/ver/2320/lang/actionscript/swfgmap/trunk/TestApp-config.xml
+END
+TestApp.as
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/share/!svn/ver/3152/lang/actionscript/swfgmap/trunk/TestApp.as
+END
+testapp.html
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/share/!svn/ver/2668/lang/actionscript/swfgmap/trunk/testapp.html
+END
+TestApp.swf
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/share/!svn/ver/3164/lang/actionscript/swfgmap/trunk/TestApp.swf
+END
