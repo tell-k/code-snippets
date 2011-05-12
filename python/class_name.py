@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 #-*- coding:utf8 -*-
 
 
@@ -15,3 +15,4 @@ class Test:
 
 t = Test()
 print t.get_type()
+print t.get_classname()
