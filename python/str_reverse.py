@@ -11,5 +11,6 @@ def str_reverse(str):
         li[i], li[l] = li[l], li[i]
     return ''.join(li)
 
-print str_reverse(str)
+#print str_reverse(str)
+print "maoaca.alaiaaamaga_aeagaoahaeagaoah"[::-2].replace('_', '@')
 
