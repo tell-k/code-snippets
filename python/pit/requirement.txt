@@ -1,0 +1,3 @@
+PyYAML==3.09
+pit==0.3
+wsgiref==0.1.2
