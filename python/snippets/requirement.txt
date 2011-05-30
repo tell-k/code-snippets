@@ -1,0 +1,4 @@
+DateTime==3.0b1
+pytz==2011g
+wsgiref==0.1.2
+zope.interface==3.6.3
