@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0081)http://web.archive.org/web/20071125073023/http://usrb.in/amachang/static/gaiax01/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css; charset=utf-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript; charset=utf-8">
+<meta name="generator" content="vim">
+<meta name="version" content="0.1">
+<meta name="author" content="amachang">
+<meta name="keywords" content="JavaScript,オブジェクト指向,プログラミング">
+<meta name="description" content="2007年4月11日に株式会社ガイアックスで行われた社内勉強会における amachang の資料です。">
+<link rev="made" href="mailto:seijro@gmail.com">
+<link rel="stylesheet" href="./amachang - JavaScript 入門_files/skin.css" type="text/css" media="all">
+<title>amachang - JavaScript 入門</title>
+<script type="text/javascript">
+// <![CDATA[
+var exec = function(id) {
+    function text(e) {
+        var t = '';
+        var nl = e.childNodes;
+        for (var i = 0, l = nl.length; i < l; i ++)
+            t += ((nl[i].nodeType == 1) ? arguments.callee(nl[i]) : nl[i].nodeValue);
+        return t;
+    }
+    eval(text(document.getElementById(id)));
+}
+// ]]>
+</script>
+</head>
+<body>
+
+<!--===========================================================-->
+<h1>JavaScript 入門</h1>
+<span>Hitoshi Amano</span>
+<ul>
+ <li><address>&lt;<a title="mail" href="mailto:seijro@gmail.com">seijro@gmail.com</a>&gt;</address></li>
+ <li><address>&lt;<a title="blog" href="http://web.archive.org/web/20071125073023/http://d.hatena.ne.jp/amachang/">http://d.hatena.ne.jp/amachang/</a>&gt;</address></li>
+ <li><address>&lt;<a title="wiki" href="http://web.archive.org/web/20071125073023/http://usrb.in/amachang">http://usrb.in/amachang</a>&gt;</address></li>
+ <li><address>&lt;<a title="organization" href="http://web.archive.org/web/20071125073023/http://shibuyajs.org/">http://shibuyajs.org/</a>&gt;</address></li>
+ <li><address>&lt;<a title="company" href="http://web.archive.org/web/20071125073023/http://www.gaiax.co.jp/">http://www.gaiax.co.jp/</a>&gt;</address></li>
+</ul>
+<!--===========================================================-->
+<div class="section">
+ <h2>プログラミングのこつ</h2>
+ <p>無駄な<strong>名前</strong>を極力使わないこと。意味単位に<strong>名前空間</strong>を細かく階層的に分離すること。</p>
+
+ <div class="section">
+  <h3>ここで言う名前空間とは</h3>
+  <p>名前空間とは、一つの名前が一意のものを表す空間。例えば、大きな目で見れば、日本語は自然言語の名前空間である。また、専門用語なども名前空間と考えることが出来る。</p>
+<pre>日本語 {
+    コンニチワ = 挨拶
+    :
+    :
+}
+中国語 {
+    ニーハオ = 挨拶
+}
+英語 {
+    ハロー = 挨拶
+}
+</pre>
+ </div>
+ <div class="section">
+   <h3>また、名前空間は重なり（優先順位）を持つ</h3>
+    <p>同音異義語などの言葉は、それぞれの細かい名前空間の重なりによって一意のものに特定されると考えられる</p>
+    <p>たとえば、「コイが好き」と言った場合</p>
+    <pre>池に関する名前空間           { コイ = すいすいパクパク }
+    チャライ話題に関する名前空間 { コイ = ドキドキきゅんきゅん }
+    お茶に関する名前空間         { コイ = にがーい }
+    </pre>
+   <p>名前空間の優先順位を考えると、一意の意味を知ることができる。</p>
+  </div>
+ </div>
+
+<!--===========================================================-->
+
+ <div class="section">
+  <h2>JavaScript 入門</h2>
+  <ul>
+   <li>データを構造化する</li>
+   <li>オブジェクトを使う</li>
+   <li>スコープを使う</li>
+   <li>プロトタイプを使う</li>
+  </ul>
+
+  <div class="section">
+   <h3>構造化されていない場合</h3>
+<pre id="source001"><strong>var element</strong> = document.getElementById('target001');
+<strong>var left</strong> = 0; 
+<strong>var id</strong> = setInterval(moveBox, 20);
+<strong>function moveBox</strong>() {
+    left += 4;
+    element.style.left = left + 'px';
+    if (left == 400) clearInterval(id);
+}
+</pre>
+   <div id="target001" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source001&#39;)" href="javascript:void(0)">exec</a></p>
+
+   <p>グローバル名前空間に 4 つの名前 element, id, left, moveBox が生成される</p>
+  </div>
+
+  <div class="section">
+   <h3>構造化された場合</h3>
+<pre id="source002"><strong>var box = {</strong>
+    <strong>element:</strong> document.getElementById('target002'),
+    <strong>left:</strong> 0,
+    <strong>id:</strong> setInterval(moveBox, 10)
+<strong>}</strong>;
+function moveBox() {
+    <strong>box.</strong>left += 4;
+    <strong>box.</strong>element.style.left = <strong>box.</strong>left + 'px';
+    if (<strong>box.</strong>left &gt; 400) clearInterval(<strong>box.</strong>id);
+}
+</pre>
+   <div id="target002" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source002&#39;)" href="javascript:void(0)">exec</a></p>
+
+   <p>グローバル名前空間の汚染は 2 つに減る。</p>
+  </div>
+
+  <div class="section">
+   <h3>オブジェクトを使う場合</h3>
+<pre id="source003">var box = {
+    element: document.getElementById('target003'),
+    left: 0,
+    <strong>move:</strong> function() {
+        box.left += 4;
+        box.element.style.left = box.left + 'px';
+        if (box.left &gt; 400) clearInterval(box.id);
+    },
+    <strong>start: function() {</strong>
+        <strong>this.id = setInterval(this.move, 20);</strong>
+    <strong>}</strong>
+};
+<strong>box.start()</strong>;
+</pre>
+   <div id="target003" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source003&#39;)" href="javascript:void(0)">exec</a></p>
+   <p>一つの名前に集約できたしかし、名前 box を使いまわせない</p>
+  </div>
+
+  <div class="section">
+   <h3>名前 box を使いまわせなるように、 this を使う</h3>
+
+<pre id="source004">var box = {
+    element: document.getElementById('target004'),
+    left: 0,
+    move: function() {
+        this.left += 4;
+        this.element.style.left = this.left + 'px';
+        if (this.left &gt; 400) clearInterval(this.id);
+    },
+    start: function() {
+        <strong>var self = this;</strong>
+        this.id = setInterval(<strong>function() { self.move() }</strong>, 20);
+    }
+};
+box.start();
+</pre>
+   <div id="target004" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source004&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+
+  <div class="section">
+   <h3>じゃあ、二つ以上の box だったらどうよ</h3>
+
+<pre id="source005"><strong>function createBox(id) {</strong>
+    <strong>return</strong> {
+        element: document.getElementById(id),
+        left: 0,
+        move: function() {
+            this.left += 4;
+            this.element.style.left = this.left + 'px';
+            if (this.left &gt; 400) clearInterval(this.id);
+        },
+        start: function() {
+            var self = this;
+            this.id = setInterval(function() { self.move() }, 20);
+        }
+    };
+<strong>}</strong>
+
+var box1 = createBox('target005-1');
+var box2 = createBox('target005-2');
+
+box1.start();
+box2.start();
+</pre>
+   <div id="target005-1" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <div id="target005-2" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source005&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>box1, box2 の共通の値を定義する</h3>
+
+<pre id="source006"><strong>var boxSpeed = 4;</strong>
+function createBox(id) {
+    return {
+        element: document.getElementById(id),
+        left: 0,
+        move: function() {
+            this.left <strong>+= boxSpeed</strong>;
+            this.element.style.left = this.left + 'px';
+            if (this.left &gt; 400) clearInterval(this.id);
+        },
+        start: function() {
+            var self = this;
+            this.id = setInterval(function() { self.move() }, 20);
+        }
+    };
+}
+
+var box1 = createBox('target006-1');
+var box2 = createBox('target006-2');
+
+box1.start();
+box2.start();
+
+<strong>setTimeout(function() { boxSpeed = 1 }, 600);</strong>
+</pre>
+   <div id="target006-1" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <div id="target006-2" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source006&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>グローバル変数がﾓｯﾀｲﾅｽ＞＜、プロトタイプを使う</h3>
+
+<pre id="source007">function Box(id) {
+    <strong>this.</strong>element = document.getElementById(id);
+    <strong>this.</strong>left = 0;
+    <strong>this.</strong>move = function() {
+        this.left <strong>+= this.speed</strong>;
+        this.element.style.left = this.left + 'px';
+        if (this.left &gt; 400) clearInterval(this.id);
+    };
+    <strong>this.</strong>start = function() {
+        var self = this;
+        this.id = setInterval(function() { self.move() }, 20);
+    };
+}
+<strong>Box.prototype.speed = 4;</strong>
+
+var box1 = <strong>new Box('target007-1')</strong>;
+var box2 = <strong>new Box('target007-2')</strong>;
+
+box1.start();
+box2.start();
+
+<strong>setTimeout(function() { Box.prototype.speed = 1 }, 600);</strong>
+</pre>
+   <div id="target007-1" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <div id="target007-2" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source007&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>てか、関数も共通だよね！</h3>
+
+<pre id="source008">function Box(id) {
+    this.element = document.getElementById(id);
+    this.left = 0;
+}
+Box.prototype.speed = 4;
+<strong>Box.prototype.move</strong> = function() {
+    this.left += this.speed;
+    this.element.style.left = this.left + 'px';
+    if (this.left &gt; 400) clearInterval(this.id);
+};
+<strong>Box.prototype.start</strong> = function() {
+    var self = this;
+    this.id = setInterval(function() { self.move() }, 20);
+};
+
+var box1 = new Box('target008-1');
+var box2 = new Box('target008-2');
+
+box1.start();
+box2.start();
+
+setTimeout(function() { Box.prototype.speed = 1 }, 600);
+</pre>
+   <div id="target008-1" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <div id="target008-2" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source008&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>みにくいのでオブジェクトを入れ替える方式に</h3>
+
+<pre id="source009">function Box(id) {
+    this.element = document.getElementById(id);
+    this.left = 0;
+}
+<strong>Box.prototype = {</strong>
+    speed: 4,
+    move: function() {
+        this.left += this.speed;
+        this.element.style.left = this.left + 'px';
+        if (this.left &gt; 400) clearInterval(this.id);
+    },
+    start: function() {
+        var self = this;
+        this.id = setInterval(function() { self.move() }, 20);
+    }
+<strong>};</strong>
+
+var box1 = new Box('target009-1');
+var box2 = new Box('target009-2');
+
+box1.start();
+box2.start();
+
+setTimeout(function() { Box.prototype.speed = 1 }, 600);
+</pre>
+   <div id="target009-1" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <div id="target009-2" style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   <p><a onclick="exec(&#39;source009&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>複数要素</h3>
+
+<pre id="source010">function Box(e) {
+    this.element = e;
+    this.left = 0;
+}
+Box.prototype = {
+    speed: 4,
+    move: function() {
+        this.left += this.speed;
+        this.element.style.left = this.left + 'px';
+        if (this.left &gt; 400) clearInterval(this.id);
+    },
+    start: function() {
+        var self = this;
+        this.id = setInterval(function() { self.move() }, 20);
+    }
+};
+var nl = document.getElementById('target010').getElementsByTagName('div');
+for (var i = 0, l = nl.length; i &lt; l; i ++) {
+    var e = nl[i];
+    <strong>with({e:e})</strong>
+    setTimeout(function() {
+        var box = new Box(e);
+        box.start();
+    }, i * 500);
+}
+
+</pre>
+   <div id="target010">
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   </div>
+   <p><a onclick="exec(&#39;source010&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+
+  <div class="section">
+   <h3>使い捨て変数名前空間</h3>
+
+<pre id="source011">function Box(e) {
+    this.element = e;
+    this.left = 0;
+}
+Box.prototype = {
+    speed: 4,
+    move: function() {
+        this.left += this.speed;
+        this.element.style.left = this.left + 'px';
+        if (this.left &gt; 400) clearInterval(this.id);
+    },
+    start: function() {
+        var self = this;
+        this.id = setInterval(function() { self.move() }, 20);
+    }
+};
+
+<strong>(function() {</strong>
+    var nl = document.getElementById('target011').getElementsByTagName('div');
+    for (var i = 0, l = nl.length; i &lt; l; i ++) {
+        var e = nl[i];
+        with({e:e})
+        setTimeout(function() {
+            var box = new Box(e);
+            box.start();
+        }, i * 500);
+    }
+<strong>})();</strong>
+
+</pre>
+   <div id="target011">
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+    <div style="position:relative;background:gray;width:100px;height:100px;margin:1em"></div>
+   </div>
+   <p><a onclick="exec(&#39;source011&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>DOM(時間があまったら)</h3>
+   <p>まあ、なんだかんだいっても JavaScript は DOM を暗記すればスラスラ書ける</p>
+  </div>
+
+  <div class="section">
+   <h3>天気という文字列を抽出せよ</h3>
+<pre>&lt;p id="target012"&gt;今日はいい&lt;strong&gt;天気&lt;/strong&gt;だ。&lt;/p&gt;
+</pre>
+   <p id="target012">今日はいい<strong>天気</strong>だ。</p>
+<pre id="source012" onclick="this.innerHTML=&#39;alert(document.getElementById(\&#39;target012\&#39;).childNodes[1].firstChild.nodeValue)&#39;">答えの例はここを click!!
+</pre>
+   <p><a onclick="exec(&#39;source012&#39;)" href="javascript:void(0)">exec</a></p>
+  </div>
+
+  <div class="section">
+   <h3>strong をすべて em にせよ</h3>
+<pre>&lt;p id="target013"&gt;&lt;strong&gt;今日&lt;/strong&gt;はいい&lt;strong&gt;天気&lt;/strong&gt;だ。&lt;/p&gt;
+</pre>
+   <p id="target013"><strong>今日</strong>はいい<strong>天気</strong>だ。</p>
+<pre id="source013" onclick="
+this.innerHTML=&#39;var p = document.getElementById(\&#39;target013\&#39;);\n\
+var n, nl = p.getElementsByTagName(\&#39;strong\&#39;);\n\
+while (n = nl[0]) {\n\
+    var e = document.createElement(\&#39;em\&#39;);\n\
+    p.replaceChild(e, n);\n\
+    e.appendChild(n.firstChild);\n\
+}\
+&#39;
+">答えの例はここを click!!
+</pre>
+   <p><a onclick="exec(&#39;source013&#39;)" href="javascript:void(0)">exec</a></p>
+</div>
+</div>
+</body>
+</html>
