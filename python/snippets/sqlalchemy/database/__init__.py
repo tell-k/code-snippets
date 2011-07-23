@@ -12,7 +12,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 dsn = 'mysql://testuser:testpass@localhost/test'
-engine = create_engine(dsn, convert_unicode=True)
+engine = create_engine(dsn, convert_unicode=True, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                             autoflush=False,
                             bind=engine))
