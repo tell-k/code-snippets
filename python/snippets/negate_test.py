@@ -8,9 +8,3 @@ x = 10
 print str(op.invert(x))
 print str(~x)
 
-tmp = 'hoge'
-
-def kozawa():
-    print tmp
-
-kozawa()

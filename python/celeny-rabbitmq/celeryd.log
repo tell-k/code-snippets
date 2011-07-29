@@ -1,0 +1,90 @@
+[2011-07-27 17:41:18,989: WARNING/MainProcess] -------------- celery@dev.tell-k-sclib.net v2.2.7
+---- **** -----
+--- * ***  * -- [Configuration]
+-- * - **** ---   . broker:      amqplib://guest@127.0.0.1:5672/
+- ** ----------   . loader:      celery.loaders.default.Loader
+- ** ----------   . logfile:     celeryd.log@INFO
+- ** ----------   . concurrency: 4
+- ** ----------   . events:      OFF
+- *** --- * ---   . beat:        OFF
+-- ******* ----
+--- ***** ----- [Queues]
+ --------------   . celery:      exchange:celery (direct) binding:celery
+                  
+
+[Tasks]
+  . tasks.add
+[2011-07-27 17:41:19,000: INFO/PoolWorker-1] child process calling self.run()
+[2011-07-27 17:41:19,001: INFO/PoolWorker-2] child process calling self.run()
+[2011-07-27 17:41:19,002: INFO/PoolWorker-3] child process calling self.run()
+[2011-07-27 17:41:19,006: INFO/PoolWorker-4] child process calling self.run()
+[2011-07-27 17:41:19,007: WARNING/MainProcess] celery@dev.tell-k-sclib.net has started.
+[2011-07-27 17:41:22,568: WARNING/MainProcess] celeryd: Hitting Ctrl+C again will terminate all running tasks!
+[2011-07-27 17:41:22,569: WARNING/MainProcess] celeryd: Warm shutdown (MainProcess)
+[2011-07-27 17:41:24,008: WARNING/MainProcess] celeryd: Cold shutdown (MainProcess)
+[2011-07-27 17:41:24,009: INFO/MainProcess] process shutting down
+[2011-07-27 17:48:12,730: WARNING/MainProcess] -------------- celery@dev.tell-k-sclib.net v2.2.7
+---- **** -----
+--- * ***  * -- [Configuration]
+-- * - **** ---   . broker:      amqplib://guest@127.0.0.1:5672/
+- ** ----------   . loader:      celery.loaders.default.Loader
+- ** ----------   . logfile:     celeryd.log@INFO
+- ** ----------   . concurrency: 4
+- ** ----------   . events:      OFF
+- *** --- * ---   . beat:        OFF
+-- ******* ----
+--- ***** ----- [Queues]
+ --------------   . celery:      exchange:celery (direct) binding:celery
+                  
+
+[Tasks]
+  . tasks.add
+[2011-07-27 17:48:12,740: INFO/PoolWorker-1] child process calling self.run()
+[2011-07-27 17:48:12,742: INFO/PoolWorker-2] child process calling self.run()
+[2011-07-27 17:48:12,743: INFO/PoolWorker-3] child process calling self.run()
+[2011-07-27 17:48:12,746: INFO/PoolWorker-4] child process calling self.run()
+[2011-07-27 17:48:12,746: WARNING/MainProcess] celery@dev.tell-k-sclib.net has started.
+[2011-07-27 17:48:12,749: ERROR/MainProcess] Consumer: Connection Error: [Errno 61] Connection refused. Trying again in 2 seconds...
+[2011-07-27 17:48:14,695: WARNING/MainProcess] celeryd: Hitting Ctrl+C again will terminate all running tasks!
+[2011-07-27 17:48:14,696: WARNING/MainProcess] celeryd: Warm shutdown (MainProcess)
+[2011-07-27 17:48:15,945: INFO/PoolWorker-2] process shutting down
+[2011-07-27 17:48:15,945: INFO/PoolWorker-4] process shutting down
+[2011-07-27 17:48:15,945: WARNING/MainProcess] celeryd: Cold shutdown (MainProcess)
+[2011-07-27 17:48:15,945: INFO/PoolWorker-2] process exiting with exitcode 0
+[2011-07-27 17:48:15,945: INFO/PoolWorker-4] process exiting with exitcode 0
+[2011-07-27 17:48:15,945: INFO/PoolWorker-3] process shutting down
+[2011-07-27 17:48:15,946: INFO/PoolWorker-3] process exiting with exitcode 0
+[2011-07-27 17:48:15,946: INFO/MainProcess] process shutting down
+[2011-07-27 17:48:15,945: INFO/PoolWorker-1] process shutting down
+[2011-07-27 17:50:37,308: WARNING/MainProcess] -------------- celery@dev.tell-k-sclib.net v2.2.7
+---- **** -----
+--- * ***  * -- [Configuration]
+-- * - **** ---   . broker:      amqplib://guest@127.0.0.1:5672/
+- ** ----------   . loader:      celery.loaders.default.Loader
+- ** ----------   . logfile:     celeryd.log@INFO
+- ** ----------   . concurrency: 4
+- ** ----------   . events:      OFF
+- *** --- * ---   . beat:        OFF
+-- ******* ----
+--- ***** ----- [Queues]
+ --------------   . celery:      exchange:celery (direct) binding:celery
+                  
+
+[Tasks]
+  . tasks.add
+[2011-07-27 17:50:37,320: INFO/PoolWorker-1] child process calling self.run()
+[2011-07-27 17:50:37,320: INFO/PoolWorker-2] child process calling self.run()
+[2011-07-27 17:50:37,322: INFO/PoolWorker-3] child process calling self.run()
+[2011-07-27 17:50:37,325: INFO/PoolWorker-4] child process calling self.run()
+[2011-07-27 17:50:37,329: WARNING/MainProcess] celery@dev.tell-k-sclib.net has started.
+[2011-07-27 17:50:39,090: WARNING/MainProcess] celeryd: Hitting Ctrl+C again will terminate all running tasks!
+[2011-07-27 17:50:39,090: WARNING/MainProcess] celeryd: Warm shutdown (MainProcess)
+[2011-07-27 17:50:40,525: INFO/PoolWorker-1] process shutting down
+[2011-07-27 17:50:40,525: INFO/PoolWorker-3] process shutting down
+[2011-07-27 17:50:40,525: INFO/PoolWorker-2] process shutting down
+[2011-07-27 17:50:40,525: INFO/PoolWorker-1] process exiting with exitcode 0
+[2011-07-27 17:50:40,525: INFO/PoolWorker-3] process exiting with exitcode 0
+[2011-07-27 17:50:40,525: INFO/PoolWorker-2] process exiting with exitcode 0
+[2011-07-27 17:50:40,525: INFO/PoolWorker-4] process shutting down
+[2011-07-27 17:50:40,525: INFO/PoolWorker-4] process exiting with exitcode 0
+[2011-07-27 17:50:40,529: INFO/MainProcess] process shutting down
