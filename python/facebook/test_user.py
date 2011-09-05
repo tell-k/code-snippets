@@ -2,9 +2,9 @@
 #-*- coding:utf8 -*-
 """
     create test account for facebook
-    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         
-    :author: tell-k
+    :author: tell_k
     :copyright: tell-k. All Rights Reserved.
     :ref: http://developers.facebook.com/docs/test_users/
     :ref: http://facebook-docs.oklahome.net/archives/51976670.html
@@ -16,18 +16,16 @@ import cgi
 import simplejson
 import StringIO
 from pit import Pit
-from pprint import pprint
 
-#set your app_id, CONSUMER_SECRET
-conf = Pit.get('fb')
+conf = Pit.get('fb_app_info')
 APP_ID = conf['app_id']
 CONSUMER_SECRET = conf['consumer_secret']
 
 #num of test user
-TEST_USER_NUM = 5
+DEFAULT_TEST_USER_NUM = 3
 
 def get_app_access_token(app_id, consumer_secret):
-    """ 登録Facebookアプリ自体のアクセストークンを取得 """
+    """ get access_token for facebook application  """
     url = "https://graph.facebook.com/oauth/access_token?" + urllib.urlencode(dict(
         client_id=app_id,
         client_secret=consumer_secret,
@@ -38,7 +36,7 @@ def get_app_access_token(app_id, consumer_secret):
     return access_token
 
 def _create(app_id, app_token, installed, name):
-    """ test user の取得"""
+    """ create test user. """
     base_url = "https://graph.facebook.com/" + app_id + "/accounts/test-users?"
     url = base_url + urllib.urlencode(dict(
                                 installed=installed,
@@ -93,8 +91,9 @@ def _make_friends(user_id, friend_id, access_token):
     return simplejson.load(StringIO.StringIO(res))
 
 def create(app_id, app_token, installed, name_prefix, user_num, test_users):
+    name_sample = ['taro', 'jiro', 'hanako', 'sabro', 'shiro', 'goro', 'rokuro']
     for i in range(user_num):
-        test_user = _create(APP_ID, app_token, installed, name_prefix + str(i))
+        test_user = _create(APP_ID, app_token, installed, name_prefix + name_sample[i])
         if not test_user:
             continue
         print 'create test user => ' + str(test_user)
@@ -108,10 +107,25 @@ def make_friends(test_users):
                 print 'id:%s friend request to id:%s' % (user['id'], friend['id'])
                 _make_friends(user['id'], friend['id'], user['access_token'])
 
-if __name__ == '__main__':
-    app_token = get_app_access_token(APP_ID, CONSUMER_SECRET)
-    test_users = []
-#    create(APP_ID, app_token, 'true', 'bucho_', TEST_USER_NUM, test_users)
+def _create_parser():
+    parser = argparse.ArgumentParser(description='command line interface for facebook test user')
+    parser.add_argument('dir1')
+    parser.add_argument('dir2')
+    parser.add_argument('-d')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.1')
+    return parser
+
+def main():
+    parser = _create_parser()
+    print 
+
+
+#    app_token = get_app_access_token(APP_ID, CONSUMER_SECRET)
+#    test_users = []
+#    create(APP_ID, app_token, 'true', 'liblar', TEST_USER_NUM, test_users)
 #    make_friends(test_users)
-    pprint(get_all(APP_ID, app_token))
+#    pprint(get_all(APP_ID, app_token))
 #    delete_all(APP_ID, app_token)
+
+if __name__ == '__main__':
+    main()

@@ -14,6 +14,7 @@
     両方にあるけどもタイムスタンプ(更新時刻)の異なるファイルは新しい方で古
     い方を上書きする」という処理を行うプログラムを作りなさい。
 
+    :since: Python 2.7.1
     :author: tell-k
     :copyright: tell-k. All Rights Reserved.
     :ref: http://www.nishiohirokazu.org/pwe2007/2007/06/post.html
@@ -23,10 +24,13 @@ import os
 import sys
 import shutil
 import argparse
+import stat
+from subprocess import call
 
 parser = argparse.ArgumentParser(description='syncdir')
 parser.add_argument('dir1')
 parser.add_argument('dir2')
+parser.add_argument('-d')
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 def parse_dirs(dir):
@@ -52,9 +56,17 @@ def copy_files(from_path, to_path, from_files, to_files):
         else: 
             print 'Error: file(%s) cannot copy. "%s" is exists same name dir.' %(target, to_path + target)
 
-def update_latest_file(from_path, to_path, from_files, to_files):
-    pass
-
+def update_latest_file(path1, path2, files1, files2):
+    for target in list(set(files1).intersection(set(files2))):
+        mtime1 = os.stat(path1 + target)[stat.ST_MTIME]
+        mtime2 = os.stat(path2 + target)[stat.ST_MTIME]
+        if mtime1 > mtime2:
+            shutil.copy2(path1 + target, path2 + target)
+            print "update -> " + target
+        elif mtime2 > mtime1:
+            shutil.copy2(path2 + target, path1 + target)
+            print "update -> " + target
+        
 def sync_dirs(dirpath1, dirpath2):
     dirs1, files1 = parse_dirs(dirpath1)
     dirs2, files2 = parse_dirs(dirpath2)
@@ -64,12 +76,15 @@ def sync_dirs(dirpath1, dirpath2):
     #sync files copy no exists file
     copy_files(dirpath1, dirpath2, files1, files2)
     copy_files(dirpath2, dirpath1, files2, files1)
-#    #sync file -> comparing timestamp. copy latest file to old file
+    #update 
+    update_latest_file(dirpath1, dirpath2, files1, files2)
 
 if __name__ == '__main__':
     args = parser.parse_args()
     if not os.path.isdir(args.dir1) or not os.path.isdir(args.dir2):
-        print 'Error: %s or %s is not directory' % (args.dir1, args.dir2)
+        print 'error: %s or %s is not directory' % (args.dir1, args.dir2)
         sys.exit()
-
-    sync_dirs(args.dir1, args.dir2)
+    if not args.d:
+        sync_dirs(args.dir1, args.dir2)
+    else:
+       call('watchmedo shell-command --patterns="*" --recursive --command="python ' + __file__ + ' ' + args.dir1 + ' ' + args.dir2 + ' "', shell=true)
