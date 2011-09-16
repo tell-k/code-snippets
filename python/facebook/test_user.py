@@ -17,7 +17,7 @@ import simplejson
 import StringIO
 from pit import Pit
 
-conf = Pit.get('fb_app_info')
+conf = Pit.get('fb')
 APP_ID = conf['app_id']
 CONSUMER_SECRET = conf['consumer_secret']
 
@@ -116,15 +116,11 @@ def _create_parser():
     return parser
 
 def main():
-    parser = _create_parser()
-    print 
-
-
-#    app_token = get_app_access_token(APP_ID, CONSUMER_SECRET)
-#    test_users = []
-#    create(APP_ID, app_token, 'true', 'liblar', TEST_USER_NUM, test_users)
-#    make_friends(test_users)
-#    pprint(get_all(APP_ID, app_token))
+    app_token = get_app_access_token(APP_ID, CONSUMER_SECRET)
+    test_users = []
+    create(APP_ID, app_token, 'true', 'liblar', TEST_USER_NUM, test_users)
+    make_friends(test_users)
+    pprint(get_all(APP_ID, app_token))
 #    delete_all(APP_ID, app_token)
 
 if __name__ == '__main__':

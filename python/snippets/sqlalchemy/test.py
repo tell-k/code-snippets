@@ -15,6 +15,10 @@ Base.metadata.create_all(bind=engine)
 
 db_session.add(Entry())
 db_session.commit()
+db_session.add(Entry())
+db_session.commit()
 
-e = db_session.query(Entry).first()
-print e.datetime
+ids = [1]
+entries  = db_session.query(Entry).filter(Entry.id.in_(ids))
+for entry in entries:
+    print entry.id
