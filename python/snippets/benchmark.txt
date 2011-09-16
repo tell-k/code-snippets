@@ -1,0 +1,1 @@
+python -m timeit -n 1000 "range1500=range(500, 1500);[x for x in range(1000) if x in range1500]"
