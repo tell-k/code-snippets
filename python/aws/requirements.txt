@@ -1,0 +1,4 @@
+PyYAML==3.10
+boto==2.0
+pit==0.3
+wsgiref==0.1.2
