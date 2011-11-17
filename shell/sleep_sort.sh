@@ -1,5 +1,6 @@
 #!/bin/bash  
 
+
 #http://d.hatena.ne.jp/gfx/20110519/1305810786
 
 function f() {
