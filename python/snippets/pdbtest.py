@@ -8,6 +8,7 @@ def div(x, y):
 
 def main():
     x = 6
+    import pdb; pdb.set_trace()
     for i in [3, 2, 1, 0]:
         x = div(x, i)
     return x
@@ -15,15 +16,15 @@ def main():
 if __name__ == '__main__':
     main()
 
-#python -m pdb pdbtest.python
+#python -m pdb pdbtest.py
 
 #step s    ステップ進む
 #list l    現在位置確認
-#p hoge    変数確認
-#return    returnされるとこまで
-#continue  最後まで
+#p var     変数(var)の確認
+#return    returnされるところまで処理実行
+#continue  最後まで処理を実行
 #break x   x行にbreakpoint
-#break     ブレーのポイントの確認
+#break     ブレークポイントの確認
 #clear x   ブレークポイントの削除
 #enable x  ブレークポイントの有効
 #disable x ブレークポイントの無効
