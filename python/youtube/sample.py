@@ -3,13 +3,13 @@
 """
     sample for gdata.youtube
     ~~~~~~~~~~~~~~~~~~
-        
+
     :author: tell-k
     :copyright: tell-k. All Rights Reserved.
     :ref: http://developers.facebook.com/docs/test_users/
     :ref: http://facebook-docs.oklahome.net/archives/51976670.html
     :tool: http://www.koikikukan.com/tools/facebook/TestUsers/
-""" 
+"""
 from pit import Pit
 
 conf = Pit.get('gdata')
