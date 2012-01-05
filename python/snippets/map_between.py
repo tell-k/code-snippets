@@ -2,14 +2,14 @@
 #-*- coding:utf8 -*-
 
 from itertools import imap, ifilter
+from benchmarker import Benchmarker
+import time
+import os
 
-test = [1, 2, 3, 4, 5]
+test = range(10000000)
 
-
-def map_between(x, func):
+def map_between1(x, func):
     return list(imap(func, x, x[1:]))
-
-print map_between(test, lambda x, y: x + y) #=> [3, 5, 7, 9]
 
 def map_between2(lst, func):
     itr = iter(lst)
@@ -18,31 +18,39 @@ def map_between2(lst, func):
         yield func(x, y)
         x = y
 
-print list(map_between2(test, lambda x, y: x + y)) #=> [3, 5, 7, 9]
-
 def map_between3(lst, func):
-    itr = iter(lst)
-    x = itr.next()
-    ret = []
-    for y in itr:
-        ret.append(func(x, y))
-        x = y
-    return ret
-
-print map_between3(test, lambda x, y: x + y) #=> [3, 5, 7, 9]
-
-def map_between4(lst, func):
     return [func(lst[i], lst[i + 1]) for i in range(len(lst) - 1)]
 
-print map_between4(test, lambda x, y: x + y) #=> [3, 5, 7, 9]
+def map_between4(lst, func):
+    return (func(lst[i], lst[i + 1]) for i in range(len(lst) - 1))
 
 class List(list):
-
-    def map_between(self, func):
+    def map_between1(self, func):
         return list(imap(func, self, self[1:]))
 
-    def map_between4(self, func):
-        return [func(lst[i], lst[i + 1]) for i in range(len(lst) - 1)]
+func = lambda x, y: x + y
 
-mylist = List(test)
-print mylist.map_between(lambda x, y: x + y) #=> [3, 5, 7, 9]
+#ret = map_between3(test, func)
+#for r in ret:
+#    v = r
+#print int(os.popen('/bin/ps -o rss %d' % os.getpid()).readlines()[-1])
+#time.sleep(100000)
+
+with Benchmarker() as bm:
+    with bm('map_between1'):
+        ret = map_between1(test, func)
+        for r in ret:
+            break
+    with bm('map_between2'):
+        ret = list(map_between2(test, func))
+        for r in ret:
+            break
+    with bm('map_between3'):
+        ret = map_between3(test, func)
+        for r in ret:
+            break
+    with bm('map_between4'):
+        ret = list(map_between4(test, func))
+        for r in ret:
+            break
+
