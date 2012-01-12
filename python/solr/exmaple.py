@@ -16,17 +16,17 @@ from pprint import pprint
 SOLR_API_URL = 'http://localhost:8983/solr'
 word = u'アパッチ'
 
-print 'solrpy' + '--' * 50
-import solr
-s = solr.SolrConnection(SOLR_API_URL)
-for r in s.query(word):
-    pprint(r)
-
-print 'pysolr' + '--' * 50
-import pysolr
-s = pysolr.Solr(SOLR_API_URL)
-for r in s.search(word):
-    pprint(r)
+#print 'solrpy' + '--' * 50
+#import solr
+#s = solr.SolrConnection(SOLR_API_URL)
+#for r in s.query(word):
+#    pprint(r)
+#
+#print 'pysolr' + '--' * 50
+#import pysolr
+#s = pysolr.Solr(SOLR_API_URL)
+#for r in s.search(word):
+#    pprint(r)
 
 print 'sunburnt' + '--' * 50
 import sunburnt
