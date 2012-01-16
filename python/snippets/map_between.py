@@ -24,6 +24,11 @@ def map_between3(lst, func):
 def map_between4(lst, func):
     return (func(lst[i], lst[i + 1]) for i in range(len(lst) - 1))
 
+def map_between5(list, func):
+    #http://chonan.blog.pid0.org/2012/01/python-2.html
+    return map(func, list[:-1], list[1:])
+
+
 class List(list):
     def map_between1(self, func):
         return list(imap(func, self, self[1:]))
