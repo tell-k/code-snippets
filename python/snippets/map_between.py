@@ -9,7 +9,7 @@ import os
 test = range(10000000)
 
 def map_between1(x, func):
-    return list(imap(func, x, x[1:]))
+    return imap(func, x, x[1:])
 
 def map_between2(lst, func):
     itr = iter(lst)
@@ -28,29 +28,19 @@ class List(list):
     def map_between1(self, func):
         return list(imap(func, self, self[1:]))
 
-func = lambda x, y: x + y
-
 #ret = map_between3(test, func)
 #for r in ret:
 #    v = r
 #print int(os.popen('/bin/ps -o rss %d' % os.getpid()).readlines()[-1])
 #time.sleep(100000)
 
-with Benchmarker() as bm:
+func = lambda x, y: x + y
+with Benchmarker(width=20) as bm:
     with bm('map_between1'):
         ret = map_between1(test, func)
-        for r in ret:
-            break
     with bm('map_between2'):
-        ret = list(map_between2(test, func))
-        for r in ret:
-            break
+        ret = map_between2(test, func)
     with bm('map_between3'):
         ret = map_between3(test, func)
-        for r in ret:
-            break
     with bm('map_between4'):
-        ret = list(map_between4(test, func))
-        for r in ret:
-            break
-
+        ret = map_between4(test, func)
