@@ -1,0 +1,5 @@
+# -*- coding: utf-8 -*-
+
+a = u"\xef\xbf\xa510,000 (\xe7\xa8\x8e\xe8\xbe\xbc)"
+
+print a
