@@ -5,9 +5,9 @@ import csv
 import re
 
 
-class PostalRow(object):
+class PostalCodeRow(object):
 
-    colmuns = [
+    _colmuns = [
         'region_id', 'old_zip', 'zip',
         'pref_kana', 'region_kana', 'town_kana', 'pref', 'region', 'town',
         'is_multi_zip', 'has_koaza_banchi', 'has_chome', 'is_multi_town',
@@ -24,9 +24,9 @@ class PostalRow(object):
 
     def __getattr__(self, attr_name):
         try:
-           return self.row[self.colmuns.index(attr_name)]
+            return self.row[self._colmuns.index(attr_name)]
         except ValueError:
-           return None
+            return None
 
     def _fix_region(self):
         match = re.search(r'^(.+?郡)(.+[町村])$', self.region)
@@ -62,10 +62,7 @@ class PostalRow(object):
             self.town_kana = None
         elif re.search(r'^(.+)の次に番地がくる場合', self.town):
             match = re.search(r'^(.+)の次に番地がくる場合', self.town)
-            name = match.group()
-            if self.city:
-                print self.city
-
+            name = match.groups()[0]
             if self.city and (self.city == name or re.search(r'郡%s$' % name, self.city)):
                 self.town = None
                 self.town_kana = None
@@ -74,7 +71,7 @@ class PostalRow(object):
                 self.town_kana = re.sub(r'\(ｿﾉﾀ\)$', '', self.town_kana)
         elif re.search(r'^(.+[町村])一円$', self.town):
             match = re.search(r'^(.+[町村])一円$', self.town)
-            name = match.group()
+            name = match.groups()[0]
             if self.city == name:
                 self.town = None
                 self.town_kana = None
@@ -85,76 +82,93 @@ class PostalRow(object):
             #self.town = re.sub(r'[〜～]', '〜')
 
     def _fix_subtown(self):
-        pass
+
+        if not self.town:
+            return
+
+        subtown = []
+        subtown_kana = []
+
+        if re.search(r'（([\d〜、]+)丁目）$', self.town):
+            match = re.search(r'^(.+)の次に番地がくる場合', self.town)
+            #num = self.alnum_z2h(match.groups())
+            self.town = re.sub(r'（([\d〜、]+)丁目）$', '', self.town)
+            #TODO なにやってるか分からん
 
 
-class PostalParser(object):
+class PostalCodeParser(object):
 
-    current_build_town = ''
-    current_build_town_kana = ''
-
-    def __init__(self, filename):
-        self.csv_reader = csv.reader(open(filename, 'r'))
+    def __init__(self, filename, mode=1, encoding='utf8'):
+        self._reader = csv.reader(open(filename, 'r'))
+        self._encoding = encoding
+        self._current_build_town = ''
+        self._current_build_town_kana = ''
+        self._mode = mode
 
     def __iter__(self):
         return self
 
-    def _fetch_row(self):
-        row = [r.decode('cp932').encode('utf8') for r in next(self.csv_reader)]
+    def _get_line(self):
+        row = [r.decode('cp932').encode(self._encoding) for r in next(self._reader)]
         if re.search(r'（.+[^）]$', row[8]):
             while (True):
-                tmp = [r.decode('cp932').encode('utf8') for r in next(self.csv_reader)]
+                tmp = [r.decode('cp932').encode(self._encoding) for r in next(self._reader)]
                 row[5] += tmp[5]
                 row[8] += tmp[8]
                 if re.search(r'\）$', row[8]):
                     break
 
-        town = row[8]
-        match = re.search(r'^(.+)（次のビルを除く）$', town)
+        match = re.search(r'^(.+)（次のビルを除く）$', row[8])
         if match:
-            self.current_build_town = match.groups()[0]
+            self._current_build_town = match.groups()[0]
             match = re.search(r'^(.+)\(', row[5])
             if match:
-                self.current_build_town_kana = match.groups()[0]
+                self._current_build_town_kana = match.groups()[0]
 
-        elif row[2] == '4530002' and re.search(r'^名駅\（', town):
-            self.current_build_town = '名駅'
-            self.current_build_town_kana = 'ﾒｲｴｷ'
-        elif not re.search(r'^%s.+（.+階.*）$' % self.current_build_town, town):
-            self.current_build_town = ''
-            self.current_build_town_kana = ''
+        elif row[2] == '4530002' and re.search(r'^名駅\（', row[8]):
+            self._current_build_town = '名駅'
+            self._current_build_town_kana = 'ﾒｲｴｷ'
+
+        elif not re.search(r'^%s.+（.+階.*）$' % self._current_build_town, row[8]):
+            self._current_build_town = ''
+            self._current_build_town_kana = ''
 
         return row
 
-    def next(self):
-        if self.extract_type == 0:
-            return self._fetch_row()
-        if self.extract_type == 1:
-            return self._fetch_obj()
-
     def _fetch_obj(self):
-        row = self._fetch_row()
-        return PostalRow(
-            build_town=self.current_build_town,
-            build_town_kana=self.current_build_town_kana,
+        row = self._get_line()
+        return PostalCodeRow(
+            build_town=self._current_build_town,
+            build_town_kana=self._current_build_town_kana,
             row=row
         )
 
-    def fetch_obj(self):
-        self.extract_type = 1
-        return iter(self)
+    def get_line(self):
+        self._mode = 1
+        return self
 
-    def fetch_row(self):
-        self.extract_type = 0
-        return iter(self)
+    def fetch_obj(self):
+        self._mode = 2
+        return self
+
+    def next(self):
+        if self._mode == 1:
+            return self._get_line()
+        if self._mode == 2:
+            return self._fetch_obj()
+
+    def __next__(self):
+        return self.next()
+
 
 if __name__ == "__main__":
 
-    ken_all_csv_path = "ken_all.csv"
-    parser = PostalParser(ken_all_csv_path)
-    for t in parser.fetch_obj():
-        pass
+    ken_all_csv = "KEN_ALL.csv"
+    parser = PostalCodeParser(ken_all_csv)
 
+    for t in parser:
+        print t[3]
+        pass
 
 #for t in parser:
 #    i += 1
