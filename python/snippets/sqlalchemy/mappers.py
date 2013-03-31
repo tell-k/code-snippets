@@ -41,23 +41,17 @@ class Comment(Base):
     text = Column(String)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
 
+# declare mappers
 class CommentMapper(Mapper):
     id = RawField()
     entry_id = RawField()
     text = RawField()
-    created_at = RawField()
-
-    def filter_created_at(self, value):
-        return str(value)
+    created_at = RawField(callback=lambda x:x.strftime('%Y-%m-%d %H:%M:%S'))
 
 class EntryMapper(Mapper):
     id = RawField()
     text = RawField()
-    created_at = RawField()
-
-    def filter_created_at(self, value):
-        return str(value)
-
+    created_at = RawField(callback=lambda x:x.strftime('%Y-%m-%d %H:%M:%S'))
     comments = ListDelegateField(CommentMapper)
 
 # insert data
