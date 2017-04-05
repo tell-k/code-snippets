@@ -13,6 +13,6 @@ def sleep_sort(n):
     print(n)
 
 Pool(num).map(
-        sleep_sort, 
+        sleep_sort,
         [randint(1, num) for i in xrange(num)]
         )
